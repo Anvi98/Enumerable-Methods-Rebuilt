@@ -45,7 +45,8 @@ module Enumerable
     if block_given?
       my_any_flag = []
       to_a.my_each { |item| my_any_flag.push(item) if yield item }
-      my_any_flag.empty? ? false : true
+      flag_result = my_any_flag.empty?
+      flag_result ? false : true
     else
       true
     end
@@ -55,8 +56,8 @@ module Enumerable
     if block_given?
       my_none_flag = []
       to_a.my_each { |item| my_none_flag.push(item) if yield item }
-      test = my_none_flag.empty?
-      test ? true : false
+      flag_result = my_none_flag.empty?
+      flag_result ? true : false
     else
       false
     end
