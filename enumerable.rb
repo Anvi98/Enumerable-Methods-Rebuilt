@@ -63,7 +63,6 @@ module Enumerable
 
   def my_count(param = nil)
     if block_given?
-      result = 0
       to_a.my_select { |item| yield item }
       result = to_a.length
     elsif !block_given? && param != nil?
