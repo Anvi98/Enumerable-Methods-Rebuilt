@@ -65,9 +65,7 @@ module Enumerable
 
   def my_count(param = nil)
     if block_given?
-      result = to_a.my_select do |item|
-        yield item
-      end
+      result = to_a.my_select(item).length
       result.length
     elsif !block_given? && param != nil?
       to_a.my_select { |item| param == item }.length
