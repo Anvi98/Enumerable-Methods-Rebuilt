@@ -45,7 +45,7 @@ module Enumerable
     if block_given?
       my_any_flag = []
       to_a.my_each { |item| my_any_flag.push(item) if yield item }
-      if my_any_flag.empty?
+      my_any_flag.empty?
         false
       else
         true
@@ -67,9 +67,9 @@ module Enumerable
 
   def my_count(param = nil)
     if block_given?
-      result = to_a.my_select { |item| yield item }.length
+      to_a.my_select { |item| yield item }.length
     elsif !block_given? && param != nil?
-      result = to_a.my_select { |item| param == item }.length
+      to_a.my_select { |item| param == item }.length
     else
       to_a.length
     end
@@ -95,11 +95,11 @@ module Enumerable
       accumulator = to_a[0]
       new_array.shift
     end
-    new_array.my_each {|item| accumulator = yield(accumulator, item)}
+    new_array.my_each { |item| accumulator = yield(accumulator, item)}
     accumulator
   end
 end
 
 def multiply_els(array)
-  array.my_inject {|accumulator, item| accumulator * item}
+  array.my_inject { |accumulator, item| accumulator * item}
 end
