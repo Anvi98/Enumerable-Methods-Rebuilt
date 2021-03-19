@@ -55,7 +55,8 @@ module Enumerable
     if block_given?
       my_none_flag = []
       to_a.my_each { |item| my_none_flag.push(item) if yield item }
-      my_none_flag.empty? ? true : false
+      test = my_none_flag.empty?
+      test ? true : false
     else
       false
     end
@@ -63,8 +64,7 @@ module Enumerable
 
   def my_count(param = nil)
     if block_given?
-      to_a.my_select { |item| yield item }
-      result = to_a.length
+      to_a.my_select { |item| yield item }.length
     elsif !block_given? && param != nil?
       to_a.my_select { |item| param == item }.length
     else
