@@ -65,11 +65,10 @@ module Enumerable
 
   def my_count(param = nil)
     if block_given?
-      if block_given?
-        result = to_a.my_select do |item|
-          yield item
-        end
-        result.length
+      result = to_a.my_select do |item|
+        yield item
+      end
+      result.length
     elsif !block_given? && param != nil?
       to_a.my_select { |item| param == item }.length
     else
@@ -100,7 +99,6 @@ module Enumerable
     new_array.my_each { |item| accumulator = yield(accumulator, item) }
     accumulator
   end
-end
 end
 
 def multiply_els(array)
