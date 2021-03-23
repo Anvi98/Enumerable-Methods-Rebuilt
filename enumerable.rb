@@ -36,8 +36,8 @@ module Enumerable
   end
 
   def my_all?(param = nil)
+    my_all_flag = true
     if block_given?
-      my_all_flag = true
       to_a.my_each do |item|
         if item.nil? || item == false
           my_all_flag = false
@@ -45,9 +45,7 @@ module Enumerable
         elsif !yield item then my_all_flag = false
         end
       end
-      my_all_flag
     elsif param
-      my_all_flag = true
       if param.instance_of?(Class)
         my_each do |item|
           if item.is_a?(param) == false
@@ -55,34 +53,30 @@ module Enumerable
             break
           end
         end
-        my_all_flag
       elsif param.instance_of?(Regexp)
-        my_all_flag = true
         my_each do |item|
           if param.match(item).nil?
             my_all_flag = false
             break
           end
         end
-        my_all_flag
-        elsif !param.is_a?(Class) && !param.is_a?(Regexp)
-          case param
-            in self
-              return true
-          else
-            return false
-          end
+        # elsif !param.is_a?(Class) && !param.is_a?(Regexp)
+        #   case param
+        #     in self
+        #       return true
+        #   else
+        #     return false
+        #   end
       end
     else
-      my_all_flag = true
       to_a.my_each do |item|
         if item.nil? || item == false
           return my_all_flag = false
           break
         end
       end
-      my_all_flag
     end
+    my_all_flag
   end
 
   def my_any?(param = nil)
@@ -114,24 +108,23 @@ module Enumerable
         else
           true
         end
-        elsif !param.is_a?(Class) && !param.is_a?(Regexp)
-        case param
-          in self
-            return true
-        else
-          return false
+        # elsif !param.is_a?(Class) && !param.is_a?(Regexp)
+        # case param
+        # in self
+        # return true
+        #  else
+        # return false
+        # end
+      end
+    else
+      my_any_flag = true
+      to_a.my_each do |item|
+        if item.nil? || item == false
+          return my_any_flag
+          break
         end
       end
-      else
-        my_any_flag = true
-        to_a.my_each do |item|
-          if item.nil? || item == false
-            return my_any_flag
-            break
-          end
-        end
-        my_any_flag = false
-      end
+      my_any_flag = false
     end
   end
 
@@ -158,13 +151,13 @@ module Enumerable
           end
         end
         my_none_flag
-          elsif !param.is_a?(Class) && !param.is_a?(Regexp)
-          case param
-            in self
-              return flase
-          else
-            return true
-          end
+        #   elsif !param.is_a?(Class) && !param.is_a?(Regexp)
+        #   case param
+        #     in self
+        #       return flase
+        #   else
+        #     return true
+        #   end
       end
     else
       my_none_flag = []
@@ -197,9 +190,7 @@ module Enumerable
       to_a.my_each { |item| result.push(yield item) }
       result
     elsif param && block_given?
-      if param.is_a?(Proc)
-      to_a.my_each { |item| result.push(param.call(item)) }
-      end
+      if param.is_a?(Proc) then to_a.my_each { |item| result.push(param.call(item)) }
     else
       to_enum(:my_map)
     end
@@ -235,7 +226,7 @@ module Enumerable
             accumulator
           end
     end
-end
+  end
 end
 
 def multiply_els(array)
