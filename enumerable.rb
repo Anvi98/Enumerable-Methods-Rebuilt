@@ -173,6 +173,8 @@ module Enumerable
         end
         my_any_flag = false
       end
+    else
+      to_enum(:my_map)
     end
   end
 
