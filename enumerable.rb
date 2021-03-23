@@ -6,8 +6,10 @@ module Enumerable
         yield to_a[i]
         i += 1
       end
+      self
+    else
+      to_enum(:my_each)
     end
-    to_enum(:my_each)
   end
 
   def my_each_with_index
@@ -17,8 +19,10 @@ module Enumerable
         yield(to_a[i], i)
         i += 1
       end
+      self
+    else
+      to_enum(:my_each_with_index)
     end
-    to_enum(:my_each_with_index)
   end
 
   def my_select
@@ -31,72 +35,207 @@ module Enumerable
     end
   end
 
-  def my_all?
+  def my_all?(param = nil)
     if block_given?
       my_all_flag = true
-      to_a.my_each { |item| my_all_flag = false unless yield item }
+      to_a.my_each do |item|
+        if item.nil? || item == false
+          my_all_flag = false
+          break
+        elsif !yield item then my_all_flag = false
+        end
+      end
       my_all_flag
+    elsif param
+      my_all_flag = true
+      if param.instance_of?(Class)
+        my_each do |item|
+          if item.is_a?(param) == false
+            my_all_flag = false
+            break
+          end
+        end
+        my_all_flag
+      elsif param.instance_of?(Regexp)
+        my_all_flag = true
+        my_each do |item|
+          if param.match(item).nil?
+            my_all_flag = false
+            break
+          end
+        end
+        my_all_flag
+        elsif !param.is_a?(Class) && !param.is_a?(Regexp)
+          case param
+            in self
+              return true
+          else
+            return false
+          end
+      end
     else
-      true
+      my_all_flag = true
+      to_a.my_each do |item|
+        if item.nil? || item == false
+          return my_all_flag = false
+          break
+        end
+      end
+      my_all_flag
     end
   end
 
-  def my_any?
+  def my_any?(param = nil)
     if block_given?
       my_any_flag = []
       to_a.my_each { |item| my_any_flag.push(item) if yield item }
-      flag_result = my_any_flag.empty?
-      flag_result ? false : true
-    else
-      true
+      if my_any_flag.empty?
+        false
+      else
+        true
+      end
+    elsif param
+      my_any_flag = []
+      if param.instance_of?(Class)
+        my_each do |item|
+          my_any_flag.push(item) if item.is_a?(param) == true
+        end
+        if my_any_flag.empty?
+          false
+        else
+          true
+        end
+      elsif param.instance_of?(Regexp)
+        my_each do |item|
+          my_any_flag.push(item) unless param.match(item).nil?
+        end
+        if my_any_flag.empty?
+          false
+        else
+          true
+        end
+        elsif !param.is_a?(Class) && !param.is_a?(Regexp)
+        case param
+          in self
+            return true
+        else
+          return false
+        end
+      end
+      else
+        my_any_flag = true
+        to_a.my_each do |item|
+          if item.nil? || item == false
+            return my_any_flag
+            break
+          end
+        end
+        my_any_flag = false
+      end
     end
   end
 
-  def my_none?
+  def my_none?(param = nil)
     if block_given?
       my_none_flag = []
       to_a.my_each { |item| my_none_flag.push(item) if yield item }
-      flag_result = my_none_flag.empty?
-      flag_result ? true : false
+      my_none_flag.empty? ? true : false
+    elsif param
+      my_none_flag = true
+      if param.instance_of?(Regexp)
+        my_each do |item|
+          unless param.match(item).nil?
+            my_none_flag = false
+            break
+          end
+        end
+        my_none_flag
+      elsif param.instance_of?(Class)
+        my_each do |item|
+          if item.is_a?(param) != false
+            my_none_flag = false
+            break
+          end
+        end
+        my_none_flag
+          elsif !param.is_a?(Class) && !param.is_a?(Regexp)
+          case param
+            in self
+              return flase
+          else
+            return true
+          end
+      end
     else
-      false
+      my_none_flag = []
+      to_a.my_each do |item|
+        my_none_flag.push(item) if !item.nil? && item != false
+      end
+      if my_none_flag.empty?
+        true
+      else
+        false
+      end
     end
   end
 
   def my_count(param = nil)
     if block_given?
-      result = to_a.my_select(item).length
+      result = to_a.my_select{|item| yield item}
       result.length
-    elsif !block_given? && param != nil?
-      to_a.my_select { |item| param == item }.length
+    elsif param
+      result = to_a.my_select { |item| item == param}.length
+      result
     else
       to_a.length
     end
   end
 
-  def my_map
+  def my_map(param = nil)
     if block_given?
       result = []
       to_a.my_each { |item| result.push(yield item) }
       result
-    elsif proc
-      to_a.my_each { |item| result.push(proc.call(item)) }
+    elsif param && block_given?
+      if param.is_a?(Proc)
+      to_a.my_each { |item| result.push(param.call(item)) }
+      end
     else
       to_enum(:my_map)
     end
   end
 
-  def my_inject(param = nil)
-    new_array = to_a
-    if param
-      accumulator = param
-    else
-      accumulator = to_a[0]
-      new_array.shift
+  def my_inject(param = nil, symbol_value = nil)
+    new_array = []
+    to_a.my_each { |item| new_array.push(item)}
+    if param && symbol_value == nil
+        if param.is_a? Symbol
+          accumulator = to_a[0]
+          new_array.shift
+          new_array.my_each {|item| accumulator = accumulator.send(param.to_s, item)}
+          accumulator
+        else 
+          if block_given?
+            accumulator = param
+            new_array.my_each { |item| accumulator = yield(accumulator, item) }
+            accumulator
+          end
+        end
+      elsif param && symbol_value
+        if symbol_value.is_a? Symbol
+          accumulator = param
+          new_array.my_each {|item| accumulator = accumulator.send(symbol_value.to_s, item)}
+          accumulator
+        end
+      else
+         if block_given?
+            accumulator = to_a[0]
+            new_array.shift
+            new_array.my_each { |item| accumulator = yield(accumulator, item) }
+            accumulator
+          end
     end
-    new_array.my_each { |item| accumulator = yield(accumulator, item) }
-    accumulator
-  end
+end
 end
 
 def multiply_els(array)
