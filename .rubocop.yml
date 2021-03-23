@@ -6,7 +6,7 @@ AllCops:
     - "node_modules/**/*"
 
   DisplayCopNames: true
-  
+
 Style/Encoding:
   Enabled: false
 Layout/LineLength:
@@ -23,7 +23,7 @@ Metrics/BlockLength:
   IgnoredMethods: ["describe"]
   Max: 30
 Metrics/PerceivedComplexity:
-  Max: 20
+  Max: 25
 Metrics/CyclomaticComplexity:
   Max: 20
 

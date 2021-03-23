@@ -104,10 +104,10 @@ module Enumerable
           my_any_flag.push(item) if item == param
         end
         if my_any_flag.empty?
-         false
+          false
         else
-         true
-      end
+          true
+        end
       end
     else
       my_any_flag = true
@@ -208,7 +208,7 @@ module Enumerable
         new_array.my_each { |item| accumulator = accumulator.send(symbol_value.to_s, item) }
         accumulator
       end
-    elsif
+    else
       accumulator = to_a[0]
       new_array.shift
       new_array.my_each { |item| accumulator = yield(accumulator, item) }
