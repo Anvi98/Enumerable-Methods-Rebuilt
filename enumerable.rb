@@ -152,8 +152,8 @@ module Enumerable
       result = to_a.my_select { |item| item }
       result.length
     elsif param
-      result = to_a.my_select { |item| item == param }.length
-      result
+      result = to_a.my_select { |item| item == param }
+      result.length
     else
       to_a.length
     end
