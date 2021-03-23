@@ -99,11 +99,20 @@ module Enumerable
         #  else
         # return false
         # end
+      elsif !param.is_a?(Class) && !param.is_a?(Regexp)
+        to_a.my_each do |item|
+          my_any_flag.push(item) if item == param
+        end
+        if my_any_flag.empty?
+         false
+        else
+         true
+      end
       end
     else
       my_any_flag = true
       to_a.my_each do |item|
-        return my_any_flag if item.nil? || item == false
+        return my_any_flag = false if item.nil? || item == false
       end
       my_any_flag = false
     end
@@ -199,7 +208,7 @@ module Enumerable
         new_array.my_each { |item| accumulator = accumulator.send(symbol_value.to_s, item) }
         accumulator
       end
-    elsif block_given?
+    elsif
       accumulator = to_a[0]
       new_array.shift
       new_array.my_each { |item| accumulator = yield(accumulator, item) }
