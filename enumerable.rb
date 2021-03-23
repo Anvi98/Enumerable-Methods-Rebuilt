@@ -83,11 +83,7 @@ module Enumerable
     if block_given?
       my_any_flag = []
       to_a.my_each { |item| my_any_flag.push(item) if yield item }
-      if my_any_flag.empty?
-        false
-      else
-        true
-      end
+       my_any_flag.empty? ? false : true
     elsif param
       my_any_flag = []
       if param.instance_of?(Class)
