@@ -227,8 +227,10 @@ module Enumerable
           end
     end
   end
+
 end
 
 def multiply_els(array)
   array.my_inject { |accumulator, item| accumulator * item }
+end
 end
