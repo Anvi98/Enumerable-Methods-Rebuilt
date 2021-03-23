@@ -151,7 +151,7 @@ module Enumerable
     if block_given?
       counter = 0
       to_a.my_each { |item| counter += 1 if yield(item) }
-      return counter
+      counter
     elsif param
       result = to_a.my_select { |item| item == param }
       result.length
