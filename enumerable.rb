@@ -52,7 +52,7 @@ module Enumerable
           return my_all_flag = false if param.match(item).nil?
         end
       else
-        to_a.my_each {|item| my_all_flag = false unless item == param}
+        to_a.my_each { |item| my_all_flag = false unless item == param }
         my_all_flag
       end
     else
@@ -118,17 +118,15 @@ module Enumerable
         my_each do |item|
           return my_none_flag = false unless param.match(item).nil?
         end
-        my_none_flag
       elsif param.instance_of?(Class)
         my_each do |item|
           return my_none_flag = false if item.is_a?(param) != false
         end
-        my_none_flag
-        else
-          my_none_flag = true
-          to_a.my_each {|item| my_none_flag = false if item == param }
-          my_none_flag
+      else
+        my_none_flag = true
+        to_a.my_each { |item| my_none_flag = false if item == param }
       end
+      my_none_flag
     else
       my_none_flag = []
       to_a.my_each do |item|
@@ -161,7 +159,7 @@ module Enumerable
       to_a.my_each { |item| result.push(yield item) }
       result
     elsif param && block_given?
-      if param.is_a?(Proc) then to_a.my_each {|item| result.push(param.call(item))}
+      if param.is_a?(Proc) then to_a.my_each { |item| result.push(param.call(item)) }
       else
         my_any_flag = true
         to_a.my_each do |item|
