@@ -165,7 +165,7 @@ module Enumerable
     else
       to_enum(:my_map)
     end
- end
+  end
 
   def my_inject(param = nil, symbol_value = nil)
     new_array = []
@@ -199,14 +199,3 @@ end
 def multiply_els(array)
   array.my_inject { |accumulator, item| accumulator * item }
 end
-
-#proc = Proc.new { |num| num > 10 }
-#p [10, 11, 2, 1].my_map(&proc){ |num| num < 10 }
-#p (1..4).my_map
-
-number = [6, 4.5, 7]
-square = Proc.new {|item| item**2 }
-p number.my_map(&square)
-p (1..4).my_map
-p (1..4).my_map { |i| i*i }
-p [10, 11, 2, 1].my_map(&proc { |num| num > 10 })
