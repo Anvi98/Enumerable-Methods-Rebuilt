@@ -51,13 +51,9 @@ module Enumerable
         my_each do |item|
           return my_all_flag = false if param.match(item).nil?
         end
-        # elsif !param.is_a?(Class) && !param.is_a?(Regexp)
-        #   case param
-        #     in self
-        #       return true
-        #   else
-        #     return false
-        #   end
+      else
+        to_a.my_each {|item| my_all_flag = false unless item == param}
+        my_all_flag
       end
     else
       to_a.my_each do |item|
@@ -92,13 +88,6 @@ module Enumerable
         else
           true
         end
-        # elsif !param.is_a?(Class) && !param.is_a?(Regexp)
-        # case param
-        # in self
-        # return true
-        #  else
-        # return false
-        # end
       elsif !param.is_a?(Class) && !param.is_a?(Regexp)
         to_a.my_each do |item|
           my_any_flag.push(item) if item == param
@@ -110,11 +99,11 @@ module Enumerable
         end
       end
     else
-      my_any_flag = true
-      to_a.my_each do |item|
-        return my_any_flag = false if item.nil? || item == false
-      end
       my_any_flag = false
+      to_a.my_each do |item|
+        return my_any_flag = true unless item.nil? || item == false
+      end
+      my_any_flag
     end
   end
 
@@ -135,13 +124,10 @@ module Enumerable
           return my_none_flag = false if item.is_a?(param) != false
         end
         my_none_flag
-        #   elsif !param.is_a?(Class) && !param.is_a?(Regexp)
-        #   case param
-        #     in self
-        #       return flase
-        #   else
-        #     return true
-        #   end
+        else
+          my_none_flag = true
+          to_a.my_each {|item| my_none_flag = false if item == param }
+          my_none_flag
       end
     else
       my_none_flag = []
@@ -175,7 +161,7 @@ module Enumerable
       to_a.my_each { |item| result.push(yield item) }
       result
     elsif param && block_given?
-      if param.is_a?(Proc) then to_a.my_each { |item| result.push(param.call(item)) }
+      if param.is_a?(Proc) then to_a.my_each {|item| result.push(param.call(item))}
       else
         my_any_flag = true
         to_a.my_each do |item|
