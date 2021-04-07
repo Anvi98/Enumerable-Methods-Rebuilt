@@ -42,6 +42,19 @@ rspec
 ````
 - To make your own customization of test, you can directily edit the file : 'tests_spec.rb' inside the folder spec.
 
+### Setup rspec
+In case you've never used and installed rspec before, this is how you can install it easily.
+- Open your terminal and run this command:
+````
+gem install rspec
+````
+- To make sure you've got the rspec, type:
+````
+rspec --version
+````
+- If you get a version showing up in your terminal, you are set now :-)
+
+
 
 ## Authors
 
