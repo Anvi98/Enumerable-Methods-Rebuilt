@@ -10,7 +10,7 @@ describe Enumerable do
     end
 
     it 'returns an array if block is given.' do
-      expect(array.my_each {|item| item}).to eql(array)
+      expect(array.my_each { |item| item }).to eql(array)
     end
 
     it 'returns a range if the block is given' do
@@ -200,5 +200,4 @@ describe Enumerable do
       expect(multiply_els(5..10)).to_not eql(0)
     end
   end
-  
 end
